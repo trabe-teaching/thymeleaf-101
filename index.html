@@ -1,0 +1,1276 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Thymeleaf 101</title>
+  <style type="text/css">
+    body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #222;
+  background-color: #f7f7f7;
+  font-size: 100%;
+}
+
+.slide {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+}
+
+.slide-content {
+  width: 800px;
+  height: 600px;
+  overflow: hidden;
+  margin: 80px auto 0 auto;
+  padding: 30px;
+
+  font-weight: 200;
+  font-size: 200%;
+  line-height: 1.375;
+}
+
+.controls {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+.arrow {
+  width: 0; height: 0;
+  border: 30px solid #333;
+  float: left;
+  margin-right: 30px;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.prev {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+
+  border-left-width: 0;
+  border-right-width: 50px;
+}
+
+.next {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+
+  border-left-width: 50px;
+  border-right-width: 0;
+}
+
+.prev:hover {
+  border-right-color: #888;
+  cursor: pointer;
+}
+
+.next:hover {
+  border-left-color: #888;
+  cursor: pointer;
+}
+
+h1 {
+  font-size: 300%;
+  line-height: 1.2;
+  text-align: center;
+  margin: 170px 0 0;
+}
+
+h2 {
+  font-size: 100%;
+  line-height: 1.2;
+  margin: 5px 0;
+  text-align: center;
+  font-weight: 200;
+}
+
+h3 {
+  font-size: 140%;
+  line-height: 1.2;
+  border-bottom: 1px solid #aaa;
+  margin: 0;
+  padding-bottom: 15px;
+}
+
+ul {
+  padding: 20px 0 0 60px;
+  font-weight: 200;
+  line-height: 1.375;
+}
+
+.author h1 {
+  font-size: 170%;
+  font-weight: 200;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.author h3 {
+  font-weight: 100;
+  text-align: center;
+  font-size: 95%;
+  border: none;
+}
+
+a {
+  text-decoration: none;
+  color: #44a4dd;
+}
+
+a:hover {
+  color: #66b5ff;
+}
+
+pre {
+  font-size: 60%;
+  line-height: 1.3;
+}
+
+.progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 3px;
+  background-color: #b4b4b4;
+
+  -webkit-transition: width 0.05s ease-out;
+  -moz-transition: width 0.05s ease-out;
+  -o-transition: width 0.05s ease-out;
+  transition: width 0.05s ease-out;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 850px) {
+
+  body {
+    font-size: 70%;
+  }
+
+  .slide-content {
+    width: auto;
+  }
+
+  img {
+    width: 100%;
+  }
+
+  h1 {
+    margin-top: 120px;
+  }
+
+  .prev, .prev:hover {
+    border-right-color: rgba(135, 135, 135, 0.5);
+  }
+
+  .next, .next:hover {
+    border-left-color: rgba(135, 135, 135, 0.5);
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 50%;
+    overflow: hidden;
+  }
+
+  .slide-content {
+    padding: 10px;
+    margin-top: 10px;
+    height: 340px;
+  }
+
+  h1 {
+    margin-top: 50px;
+  }
+
+  ul {
+    padding-left: 25px;
+  }
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+  }
+
+  @page {
+    size: letter;
+  }
+
+  .hidden {
+    display: inline;
+  }
+
+  html {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  body {
+    margin: 0 auto !important;
+    border: 0;
+    padding: 0;
+    float: none !important;
+    overflow: visible;
+    background: none !important;
+    font-size: 52%;
+  }
+
+  .progress, .controls {
+    display: none;
+  }
+
+  .slide {
+    position: static;
+  }
+
+  .slide-content {
+    border: 1px solid #222;
+    margin-top: 0;
+    margin-bottom: 40px;
+    height: 3.5in;
+    overflow: visible;
+  }
+
+  .slide:nth-child(even) {
+    /* 2 slides per page */
+    page-break-before: always;
+  }
+}
+
+/*
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+*/
+
+code, pre {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  overflow: auto;
+  padding: 6px 10px;
+}
+
+code {
+  padding: 0 5px;
+}
+
+pre>code {
+  margin: 0; padding: 0;
+  border: none;
+  background: transparent;
+}
+
+pre .comment,
+pre .template_comment,
+pre .diff .header,
+pre .javadoc {
+  color: #998;
+  font-style: italic
+}
+
+pre .keyword,
+pre .css .rule .keyword,
+pre .winutils,
+pre .javascript .title,
+pre .nginx .title,
+pre .subst,
+pre .request,
+pre .status {
+  color: #333;
+  font-weight: bold
+}
+
+pre .number,
+pre .hexcolor,
+pre .ruby .constant {
+  color: #099;
+}
+
+pre .string,
+pre .tag .value,
+pre .phpdoc,
+pre .tex .formula {
+  color: #d14
+}
+
+pre .title,
+pre .id {
+  color: #900;
+  font-weight: bold
+}
+
+pre .javascript .title,
+pre .lisp .title,
+pre .clojure .title,
+pre .subst {
+  font-weight: normal
+}
+
+pre .class .title,
+pre .haskell .type,
+pre .vhdl .literal,
+pre .tex .command {
+  color: #458;
+  font-weight: bold
+}
+
+pre .tag,
+pre .tag .title,
+pre .rules .property,
+pre .django .tag .keyword {
+  color: #000080;
+  font-weight: normal
+}
+
+pre .attribute,
+pre .variable,
+pre .lisp .body {
+  color: #008080
+}
+
+pre .regexp {
+  color: #009926
+}
+
+pre .class {
+  color: #458;
+  font-weight: bold
+}
+
+pre .symbol,
+pre .ruby .symbol .string,
+pre .lisp .keyword,
+pre .tex .special,
+pre .prompt {
+  color: #990073
+}
+
+pre .built_in,
+pre .lisp .title,
+pre .clojure .built_in {
+  color: #0086b3
+}
+
+pre .preprocessor,
+pre .pi,
+pre .doctype,
+pre .shebang,
+pre .cdata {
+  color: #999;
+  font-weight: bold
+}
+
+pre .deletion {
+  background: #fdd
+}
+
+pre .addition {
+  background: #dfd
+}
+
+pre .diff .change {
+  background: #0086b3
+}
+
+pre .chunk {
+  color: #aaa
+}
+
+
+  </style>
+</head>
+<body>
+  
+  <div class="slide  cover" id="slide-1">
+    <section class="slide-content"><h1 id="thymeleaf-101">Thymeleaf 101</h1>
+<h2 id="http-ir-gl-thymeleaf-101"><a href="http://ir.gl/thymeleaf-101">http://ir.gl/thymeleaf-101</a></h2>
+</section>
+  </div>
+  <div class="slide hidden  " id="slide-2">
+    <section class="slide-content"><h1 id="marcos-abel">marcos abel</h1>
+<h2 id="marcos-abel-trabesoluciones-com">marcos.abel@trabesoluciones.com</h2>
+</section>
+  </div>
+  <div class="slide hidden  image" id="slide-3">
+    <section class="slide-content"><p><img src="images/trabe.png" alt="Trabe"></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-4">
+    <section class="slide-content"><h2 id="nota-parte-de-los-materiales-de-esta-charla-est-n-tomados-y-o-adaptados-con-permiso-del-autor-de-la-documentaci-n-oficial-del-proyecto-disponible-en-http-www-thymeleaf-org-">NOTA: parte de los materiales de esta charla están tomados y/o adaptados (con permiso del autor) de la documentación oficial del proyecto disponible en <a href="http://www.thymeleaf.org/">http://www.thymeleaf.org/</a></h2>
+</section>
+  </div>
+  <div class="slide hidden  bullets toc bullets-first" id="slide-5">
+    <section class="slide-content"><h2 id="de-qu-vamos-a-hablar">De qué vamos a hablar</h2>
+<ul>
+<li>Qué es thymeleaf y qué tiene que ver con natural templating</li>
+<li>Qué pinta tiene thymeleaf. Componentes básicos</li>
+<li>Atributos básicos</li>
+<li>Layouts</li>
+<li>Configurar Spring MVC para utilizar Thymeleaf como capa vista</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden  section" id="slide-6">
+    <section class="slide-content"><h2 id="qu-es-thymeleaf">Qué es thymeleaf</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-7">
+    <section class="slide-content"><ul>
+<li>Librería java. Open source ;)</li>
+<li>Motor de plantillas XML / HTML / HTML5</li>
+<li>Utilizable de forma &quot;independiente&quot; </li>
+<li>Intergración &quot;out of the box&quot; con Spring MVC</li>
+<li>Extensible. Framework de motores de plantillas</li>
+<li>Soporte para natural templating</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-8">
+    <section class="slide-content"><h2 id="-natural-what-">¿natural what?</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-9">
+    <section class="slide-content"><h2 id="natural-templating">Natural Templating</h2>
+<p>Las plantillas de la aplicación deberían ser prototipos válidos para trabajar sobre ellos e idealmente visualizables en un navegador sin necesidad de ser procesadas.</p>
+</section>
+  </div>
+  <div class="slide hidden  " id="slide-10">
+    <section class="slide-content"><h2 id="-natural-templating-en-jsp-i-ii-">&quot;Natural templating&quot; en jsp (I/II)</h2>
+<pre><code class="lang-xml"><span class="vbscript">&lt;%@ taglib prefix=<span class="string">"sf"</span> uri=<span class="string">"http://www.springframework.org/tags/form"</span> %&gt;</span>
+<span class="vbscript">&lt;%@ taglib prefix=<span class="string">"s"</span> uri=<span class="string">"http://www.springframework.org/tags"</span> %&gt;</span>
+<span class="vbscript">&lt;%@ taglib prefix=<span class="string">"c"</span> uri=<span class="string">"http://java.sun.com/jsp/jstl/core"</span> %&gt;</span>
+<span class="vbscript">&lt;%@ page contentType=<span class="string">"text/html; charset=UTF-8"</span> pageEncoding=<span class="string">"UTF-8"</span>%&gt;</span>
+<span class="doctype">&lt;!DOCTYPE html&gt;</span>
+
+<span class="tag">&lt;<span class="title">html</span>&gt;</span>
+
+  <span class="tag">&lt;<span class="title">head</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">title</span>&gt;</span>Spring MVC view layer: Thymeleaf vs. JSP<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"Content-Type"</span> <span class="attribute">content</span>=<span class="value">"text/html; charset=UTF-8"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">type</span>=<span class="value">"text/css"</span> <span class="attribute">media</span>=<span class="value">"all"</span> <span class="attribute">href</span>=<span class="value">"&lt;s:url value='/css/thvsjsp.css' /&gt;"</span>/&gt;</span>
+  <span class="tag">&lt;/<span class="title">head</span>&gt;</span>
+
+  <span class="tag">&lt;<span class="title">body</span>&gt;</span>
+
+    <span class="tag">&lt;<span class="title">h2</span>&gt;</span>This is a JSP<span class="tag">&lt;/<span class="title">h2</span>&gt;</span>
+
+    <span class="tag">&lt;<span class="title">s:url</span> <span class="attribute">var</span>=<span class="value">"formUrl"</span> <span class="attribute">value</span>=<span class="value">"/subscribejsp"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">sf:form</span> <span class="attribute">modelAttribute</span>=<span class="value">"subscription"</span> <span class="attribute">action</span>=<span class="value">"${formUrl}"</span>&gt;</span>
+
+      <span class="tag">&lt;<span class="title">fieldset</span>&gt;</span>
+
+        <span class="tag">&lt;<span class="title">div</span>&gt;</span>
+          <span class="tag">&lt;<span class="title">label</span> <span class="attribute">for</span>=<span class="value">"email"</span>&gt;</span><span class="tag">&lt;<span class="title">s:message</span> <span class="attribute">code</span>=<span class="value">"subscription.email"</span> /&gt;</span>: <span class="tag">&lt;/<span class="title">label</span>&gt;</span>
+          <span class="tag">&lt;<span class="title">sf:input</span> <span class="attribute">path</span>=<span class="value">"email"</span> /&gt;</span>
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-11">
+    <section class="slide-content"><h2 id="-natural-templating-en-jsp-ii-ii-">&quot;Natural templating&quot; en jsp (II/II)</h2>
+<pre><code class="lang-xml">        <span class="tag">&lt;<span class="title">div</span>&gt;</span>
+          <span class="tag">&lt;<span class="title">label</span>&gt;</span><span class="tag">&lt;<span class="title">s:message</span> <span class="attribute">code</span>=<span class="value">"subscription.type"</span> /&gt;</span>: <span class="tag">&lt;/<span class="title">label</span>&gt;</span>
+          <span class="tag">&lt;<span class="title">ul</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">c:forEach</span> <span class="attribute">var</span>=<span class="value">"type"</span> <span class="attribute">items</span>=<span class="value">"${allTypes}"</span> <span class="attribute">varStatus</span>=<span class="value">"typeStatus"</span>&gt;</span>
+              <span class="tag">&lt;<span class="title">li</span>&gt;</span>
+                <span class="tag">&lt;<span class="title">sf:radiobutton</span> <span class="attribute">path</span>=<span class="value">"subscriptionType"</span> <span class="attribute">value</span>=<span class="value">"${type}"</span> /&gt;</span>
+                <span class="tag">&lt;<span class="title">label</span> <span class="attribute">for</span>=<span class="value">"subscriptionType${typeStatus.count}"</span>&gt;</span>
+                  <span class="tag">&lt;<span class="title">s:message</span> <span class="attribute">code</span>=<span class="value">"subscriptionType.${type}"</span> /&gt;</span>
+                <span class="tag">&lt;/<span class="title">label</span>&gt;</span>
+              <span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+            <span class="tag">&lt;/<span class="title">c:forEach</span>&gt;</span>
+          <span class="tag">&lt;/<span class="title">ul</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+
+        <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"submit"</span>&gt;</span>
+          <span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">"submit"</span> <span class="attribute">name</span>=<span class="value">"save"</span>&gt;</span><span class="tag">&lt;<span class="title">s:message</span> <span class="attribute">code</span>=<span class="value">"subscription.submit"</span> /&gt;</span><span class="tag">&lt;/<span class="title">button</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+
+      <span class="tag">&lt;/<span class="title">fieldset</span>&gt;</span>
+
+    <span class="tag">&lt;/<span class="title">sf:form</span>&gt;</span>
+
+  <span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden  image" id="slide-12">
+    <section class="slide-content"><p><img src="images/jsp-statically-rendered.png" alt="Jsp renderizado estáticamente"></p>
+</section>
+  </div>
+  <div class="slide hidden  image" id="slide-13">
+    <section class="slide-content"><p><img src="images/wtf-1.jpg" alt="WTF"></p>
+</section>
+  </div>
+  <div class="slide hidden  image" id="slide-14">
+    <section class="slide-content"><p><img src="images/jsp-statically-rendered.png" alt="Jsp renderizado estáticamente"></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-15">
+    <section class="slide-content"><h2 id="natural-templating-con-thymeleaf-i-ii-">Natural templating con thymeleaf (I/II)</h2>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">DOCCTYPE</span> <span class="attribute">html</span>&gt;</span>
+
+<span class="tag">&lt;<span class="title">html</span> <span class="attribute">xmlns:th</span>=<span class="value">"http://www.thymeleaf.org"</span>&gt;</span>
+
+  <span class="tag">&lt;<span class="title">head</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">title</span>&gt;</span>Spring MVC view layer: Thymeleaf vs. JSP<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"Content-Type"</span> <span class="attribute">content</span>=<span class="value">"text/html; charset=UTF-8"</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">type</span>=<span class="value">"text/css"</span> <span class="attribute">media</span>=<span class="value">"all"</span>
+      <span class="attribute">href</span>=<span class="value">"../../css/thvsjsp.css"</span> <span class="attribute">th:href</span>=<span class="value">"@{/css/thvsjsp.css}"</span>/&gt;</span>
+  <span class="tag">&lt;/<span class="title">head</span>&gt;</span>
+
+  <span class="tag">&lt;<span class="title">body</span>&gt;</span>
+
+    <span class="tag">&lt;<span class="title">h2</span>&gt;</span>This is a Thymeleaf template<span class="tag">&lt;/<span class="title">h2</span>&gt;</span>
+
+    <span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">"#"</span> <span class="attribute">th:object</span>=<span class="value">"${subscription}"</span> <span class="attribute">th:action</span>=<span class="value">"@{/subscribeth}"</span>&gt;</span>
+
+      <span class="tag">&lt;<span class="title">fieldset</span>&gt;</span>
+
+        <span class="tag">&lt;<span class="title">div</span>&gt;</span>
+          <span class="tag">&lt;<span class="title">label</span> <span class="attribute">for</span>=<span class="value">"email"</span> <span class="attribute">th:text</span>=<span class="value">"#{subscription.email}"</span>&gt;</span>Email: <span class="tag">&lt;/<span class="title">label</span>&gt;</span>
+          <span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">th:field</span>=<span class="value">"*{email}"</span> /&gt;</span>
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-16">
+    <section class="slide-content"><h2 id="natural-templating-con-thymeleaf-ii-ii-">Natural templating con thymeleaf (II/II)</h2>
+<pre><code class="lang-xml">        <span class="tag">&lt;<span class="title">div</span>&gt;</span>
+          <span class="tag">&lt;<span class="title">label</span> <span class="attribute">th:text</span>=<span class="value">"#{subscription.type}"</span>&gt;</span>Type: <span class="tag">&lt;/<span class="title">label</span>&gt;</span>
+          <span class="tag">&lt;<span class="title">ul</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">li</span> <span class="attribute">th:each</span>=<span class="value">"type : ${allTypes}"</span>&gt;</span>
+              <span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"radio"</span> <span class="attribute">th:field</span>=<span class="value">"*{subscriptionType}"</span> <span class="attribute">th:value</span>=<span class="value">"${type}"</span> /&gt;</span>
+              <span class="tag">&lt;<span class="title">label</span> <span class="attribute">th:for</span>=<span class="value">"${#ids.prev('subscriptionType')}"</span>
+                <span class="attribute">th:text</span>=<span class="value">"#{'subscriptionType.'+${type}}"</span>&gt;</span>First type<span class="tag">&lt;/<span class="title">label</span>&gt;</span>
+            <span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">li</span> <span class="attribute">th:remove</span>=<span class="value">"all"</span>&gt;</span><span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"radio"</span> /&gt;</span> <span class="tag">&lt;<span class="title">label</span>&gt;</span>Second Type<span class="tag">&lt;/<span class="title">label</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+          <span class="tag">&lt;/<span class="title">ul</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+
+        <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"submit"</span>&gt;</span>
+          <span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">"submit"</span> <span class="attribute">name</span>=<span class="value">"save"</span> <span class="attribute">th:text</span>=<span class="value">"#{subscription.submit}"</span>&gt;</span>Subscribe me!<span class="tag">&lt;/<span class="title">button</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+
+      <span class="tag">&lt;/<span class="title">fieldset</span>&gt;</span>
+
+    <span class="tag">&lt;/<span class="title">form</span>&gt;</span>
+
+  <span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden  image" id="slide-17">
+    <section class="slide-content"><p><img src="images/th-statically-rendered.png" alt="Plantilla Thymeleaf renderizada estáticamente"></p>
+</section>
+  </div>
+  <div class="slide hidden  image" id="slide-18">
+    <section class="slide-content"><p><img src="images/cool-1.png" alt="WTF"></p>
+</section>
+  </div>
+  <div class="slide hidden  section" id="slide-19">
+    <section class="slide-content"><h2 id="qu-pinta-tiene-thymeleaf">Qué pinta tiene Thymeleaf</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-20">
+    <section class="slide-content"><pre><code class="lang-xml"><span class="tag">&lt;<span class="title">table</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">thead</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">tr</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">th</span> <span class="attribute">th:text</span>=<span class="value">"#{msgs.headers.name}"</span>&gt;</span>Name<span class="tag">&lt;/<span class="title">th</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">th</span> <span class="attribute">th:text</span>=<span class="value">"#{msgs.headers.price}"</span>&gt;</span>Price<span class="tag">&lt;/<span class="title">th</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">tr</span>&gt;</span>
+  <span class="tag">&lt;/<span class="title">thead</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">tbody</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">tr</span> <span class="attribute">th:each</span>=<span class="value">"prod : ${allProducts}"</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">td</span> <span class="attribute">th:text</span>=<span class="value">"${prod.name}"</span>&gt;</span>Oranges<span class="tag">&lt;/<span class="title">td</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">td</span> <span class="attribute">th:text</span>=<span class="value">"${#numbers.formatDecimal(prod.price,1,2)}"</span>&gt;</span>0.99<span class="tag">&lt;/<span class="title">td</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">tr</span>&gt;</span>
+  <span class="tag">&lt;/<span class="title">tbody</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">table</span>&gt;</span></code></pre>
+<p>alternativamente</p>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">table</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">tr</span> <span class="attribute">data-th-each</span>=<span class="value">"user : ${users}"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">td</span> <span class="attribute">data-th-text</span>=<span class="value">"${user.login}"</span>&gt;</span>...<span class="tag">&lt;/<span class="title">td</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">td</span> <span class="attribute">data-th-text</span>=<span class="value">"${user.name}"</span>&gt;</span>...<span class="tag">&lt;/<span class="title">td</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">tr</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">table</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-21">
+    <section class="slide-content"><h2 id="contexto-de-una-plantilla">Contexto de una plantilla</h2>
+<pre><code class="lang-java"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IContext</span> {</span>
+
+    <span class="keyword">public</span> VariablesMap&lt;String,Object&gt; getVariables();
+    <span class="keyword">public</span> Locale getLocale();
+    ...
+
+}
+
+<span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IWebContext</span> <span class="keyword">extends</span> <span class="title">IContext</span> {</span>
+
+    <span class="keyword">public</span> HttpSerlvetRequest getHttpServletRequest();
+    <span class="keyword">public</span> HttpSession getHttpSession();
+    <span class="keyword">public</span> ServletContext getServletContext();
+
+    <span class="keyword">public</span> VariablesMap&lt;String,String[]&gt; getRequestParameters();
+    <span class="keyword">public</span> VariablesMap&lt;String,Object&gt; getRequestAttributes();
+    <span class="keyword">public</span> VariablesMap&lt;String,Object&gt; getSessionAttributes();
+    <span class="keyword">public</span> VariablesMap&lt;String,Object&gt; getApplicationAttributes();
+
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-22">
+    <section class="slide-content"><h2 id="implementaci-n-de-serie-de-contexto-web">Implementación de serie de contexto web</h2>
+<pre><code class="lang-java">WebContext ctx = 
+            <span class="keyword">new</span> WebContext(request, response, servletContext, request.getLocale());</code></pre>
+<ul>
+<li>Add all the request attributes to the context variables map.</li>
+<li>Add a context variable called param containing all the request parameters.</li>
+<li>Add a context variable called session containing all the session attributes.</li>
+<li>Add a context variable called application containing all the ServletContext attributes.</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden  section" id="slide-23">
+    <section class="slide-content"><h2 id="dialecto-standard-de-thymeleaf">Dialecto Standard de thymeleaf</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-24">
+    <section class="slide-content"><h2 id="expresiones">Expresiones</h2>
+<ul>
+<li>OGNL (Object-Graph Navigation Language) | SpringEL</li>
+<li><p>Tienen acceso al contexto global de la plantilla</p>
+<pre><code class="lang-xml">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">th:text</span>=<span class="value">"${session.user.name}"</span>/&gt;</span>
+  <span class="tag">&lt;<span class="title">li</span> <span class="attribute">th:each</span>=<span class="value">"book : ${books}"</span>&gt;</span></code></pre>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-25">
+    <section class="slide-content"><h2 id="expresiones-asterisco">Expresiones asterisco</h2>
+<p>Se ejecutan sobre un contexto previamente definido </p>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">th:object</span>=<span class="value">"${book}"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">span</span> <span class="attribute">th:text</span>=<span class="value">"*{title}"</span>&gt;</span><span class="tag">&lt;/<span class="title">span</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">div</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-26">
+    <section class="slide-content"><h2 id="expresiones-de-externalizaci-n-de-cadenas">Expresiones de externalización de cadenas</h2>
+<ul>
+<li><p>se sustituyen por mensajes localizados, típicamente definidos en ficheros .properties</p>
+<pre><code class="lang-xml">  <span class="tag">&lt;<span class="title">span</span> <span class="attribute">th:text</span>=<span class="value">"#{app.messages.title}"</span>&gt;</span><span class="tag">&lt;/<span class="title">span</span>&gt;</span></code></pre>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-27">
+    <section class="slide-content"><h2 id="expresiones-de-urls">Expresiones de urls</h2>
+<ul>
+<li><p>Reescritura de urls, con soporte para parámetros y URLs relativas o absolutas</p>
+<pre><code class="lang-xml">  <span class="tag">&lt;<span class="title">form</span> <span class="attribute">th:action</span>=<span class="value">"@{/createOrder(id=${orderId})}"</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"main.html"</span> <span class="attribute">th:href</span>=<span class="value">"@{../main.html}"</span>&gt;</span>
+  <span class="tag">&lt;/<span class="title">form</span>&gt;</span></code></pre>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-28">
+    <section class="slide-content"><h2 id="literales">Literales</h2>
+<ul>
+<li>Texto: &#39;one text&#39;, &#39;Another one!&#39;,…</li>
+<li>Números: 0, 34, 3.0, 12.3,…</li>
+<li>Boolean: true, false</li>
+<li>...…</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-29">
+    <section class="slide-content"><h2 id="comparisons-and-equality">Comparisons and equality</h2>
+<ul>
+<li>Comparators: &gt;, &lt;, &gt;=, &lt;= (gt, lt, ge, le)</li>
+<li>Equality operators: ==, != (eq, ne)</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-30">
+    <section class="slide-content"><h2 id="conditional-operators">Conditional operators</h2>
+<ul>
+<li>If-then: (if) ? (then)</li>
+<li>If-then-else: (if) ? (then) : (else)</li>
+<li>Default: (value) ?: (defaultvalue)</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-31">
+    <section class="slide-content"><h2 id="operations">Operations</h2>
+<ul>
+<li>Text operations<ul>
+<li>String concatenation: +</li>
+<li>Literal substitutions: |The name is ${name}|</li>
+</ul>
+</li>
+<li>Arithmetic operations:<ul>
+<li>Binary operators: +, -, *, /, %</li>
+<li>Minus sign (unary operator): -</li>
+</ul>
+</li>
+<li>Boolean operations:<ul>
+<li>Binary operators: and, or</li>
+<li>Boolean negation (unary operator): !, not</li>
+</ul>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden  section" id="slide-32">
+    <section class="slide-content"><h2 id="atributos-b-sicos">atributos básicos</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-33">
+    <section class="slide-content"><h2 id="th-text-y-th-utext">th:text y th:utext</h2>
+<p>sustituyen el contenido de un tag por el resultado de evaluar la expresiónque contenga el atributo.</p>
+<pre><code>home.welcome=Welcome to our &lt;b&gt;fantastic&lt;/b&gt; grocery store!</code></pre>
+<p>escapando:</p>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">p</span> <span class="attribute">th:text</span>=<span class="value">"#{home.welcome}"</span>&gt;</span>Welcome to our grocery store!<span class="tag">&lt;/<span class="title">p</span>&gt;</span></code></pre>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">p</span>&gt;</span>Welcome to our &amp;lt;b&amp;gt;fantastic&amp;lt;/b&amp;gt; grocery store!<span class="tag">&lt;/<span class="title">p</span>&gt;</span></code></pre>
+<p>sin escapar:</p>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">p</span> <span class="attribute">th:utext</span>=<span class="value">"#{home.welcome}"</span>&gt;</span>Welcome to our grocery store!<span class="tag">&lt;/<span class="title">p</span>&gt;</span></code></pre>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">p</span>&gt;</span>Welcome to our <span class="tag">&lt;<span class="title">b</span>&gt;</span>fantastic<span class="tag">&lt;/<span class="title">b</span>&gt;</span> grocery store!<span class="tag">&lt;/<span class="title">p</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-34">
+    <section class="slide-content"><h2 id="th-attr">th:attr</h2>
+<p>sustituye el valor de uno o más atributos del tag.</p>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"submit"</span> <span class="attribute">value</span>=<span class="value">"Subscribe me!"</span> <span class="attribute">th:attr</span>=<span class="value">"value=#{subscribe.submit}"</span>/&gt;</span>
+<span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">"../../images/gtvglogo.png"</span> 
+     <span class="attribute">th:attr</span>=<span class="value">"src=@{/images/gtvglogo.png},title=#{logo},alt=#{logo}"</span> /&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-35">
+    <section class="slide-content"><h2 id="th-value-th-action-th-href">th:value, th:action, th:href</h2>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"submit"</span> <span class="attribute">value</span>=<span class="value">"Subscribe me!"</span> <span class="attribute">th:value</span>=<span class="value">"#{subscribe.submit}"</span>/&gt;</span>
+
+<span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">"subscribe.html"</span> <span class="attribute">th:action</span>=<span class="value">"@{/subscribe}"</span>&gt;</span>
+
+<span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"product/list.html"</span> <span class="attribute">th:href</span>=<span class="value">"@{/product/list}"</span>&gt;</span>Product List<span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-36">
+    <section class="slide-content"><h2 id="th-attrappend-th-attrprepend-y-th-classappend">th:attrappend, th:attrprepend y th:classappend</h2>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"button"</span>  <span class="attribute">class</span>=<span class="value">"btn"</span> <span class="attribute">th:attrappend</span>=<span class="value">"class=${' ' + cssStyle}"</span> /&gt;</span></code></pre>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"button"</span>  <span class="attribute">class</span>=<span class="value">"btn"</span> <span class="attribute">th:attrprepend</span>=<span class="value">"class=${cssStyle + ' '}"</span> /&gt;</span></code></pre>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">tr</span> <span class="attribute">th:each</span>=<span class="value">"prod : ${prods}"</span> <span class="attribute">class</span>=<span class="value">"row"</span> <span class="attribute">th:classappend</span>=<span class="value">"${prodStat.odd}? 'odd'"</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-37">
+    <section class="slide-content"><h2 id="th-i-ii-">th:* (I/II)</h2>
+<p>th:abbr    th:accept th:accept-charset
+th:accesskey    th:action    th:align
+th:alt    th:archive    th:audio
+th:autocomplete    th:axis    th:background
+th:bgcolor    th:border    th:cellpadding
+th:cellspacing    th:challenge    th:charset
+th:cite    th:class    th:classid
+th:codebase    th:codetype    th:cols
+th:colspan    th:compact    th:content
+th:contenteditable    th:contextmenu    th:data
+th:datetime    th:dir    th:draggable
+th:dropzone    th:enctype    th:for
+th:form    th:formaction    th:formenctype
+th:formmethod    th:formtarget    th:frame
+th:frameborder    th:headers    th:height
+th:high    th:href    th:hreflang
+th:hspace    th:http-equiv    th:icon
+th:id    th:keytype    th:kind
+th:label</p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-38">
+    <section class="slide-content"><h2 id="th-ii-ii-">th:* (II/II)</h2>
+<p>th:lang    th:list
+th:longdesc    th:low    th:manifest
+th:marginheight    th:marginwidth    th:max
+th:maxlength    th:media    th:method
+th:min    th:name    th:optimum
+th:pattern    th:placeholder    th:poster
+th:preload    th:radiogroup    th:rel
+th:rev    th:rows    th:rowspan
+th:rules    th:sandbox    th:scheme
+th:scope    th:scrolling    th:size
+th:sizes    th:span    th:spellcheck
+th:src    th:srclang    th:standby
+th:start    th:step    th:style
+th:summary    th:tabindex    th:target
+th:title    th:type    th:usemap
+th:value    th:valuetype    th:vspace
+th:width    th:wrap    th:xmlbase
+th:xmllang    th:xmlspace</p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-39">
+    <section class="slide-content"><h2 id="atributos-con-valores-fijos-en-html5">Atributos con valores fijos en HTML5</h2>
+<p>Ejemplo:</p>
+<pre><code>```xml
+&lt;input type=&quot;checkbox&quot; name=&quot;active&quot; th:checked=&quot;${user.active}&quot; /&gt;
+
+&lt;input type=&quot;checkbox&quot; name=&quot;active&quot; checked=&quot;checked&quot; /&gt;
+
+```</code></pre>
+<p>Otros atributos disponibles:</p>
+<pre><code>```
+th:async th:autofocus th:autoplay th:checked th:controls 
+th:declare th:default th:defer th:disabled th:formnovalidate 
+th:hidden th:ismap th:loop th:multiple th:novalidate 
+th:nowrap th:open th:pubdate th:readonly th:required    
+th:reversed th:scoped    th:seamless th:selected
+
+```</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-40">
+    <section class="slide-content"><h2 id="iteraci-n-i-ii-">Iteración (I/II)</h2>
+<pre><code class="lang-java">ProductService productService = <span class="keyword">new</span> ProductService();
+List&lt;Product&gt; allProducts = productService.findAll(); 
+
+WebContext ctx = <span class="keyword">new</span> WebContext(request, servletContext, request.getLocale());
+ctx.setVariable(<span class="string">"prods"</span>, allProducts);
+
+templateEngine.process(<span class="string">"product/list"</span>, ctx, response.getWriter());</code></pre>
+<p>plantilla: </p>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">table</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">tr</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">th</span>&gt;</span>NAME<span class="tag">&lt;/<span class="title">th</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">th</span>&gt;</span>PRICE<span class="tag">&lt;/<span class="title">th</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">th</span>&gt;</span>IN STOCK<span class="tag">&lt;/<span class="title">th</span>&gt;</span>
+      <span class="tag">&lt;/<span class="title">tr</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">tr</span> <span class="attribute">th:each</span>=<span class="value">"prod : ${prods}"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">td</span> <span class="attribute">th:text</span>=<span class="value">"${prod.name}"</span>&gt;</span>Onions<span class="tag">&lt;/<span class="title">td</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">td</span> <span class="attribute">th:text</span>=<span class="value">"${prod.price}"</span>&gt;</span>2.41<span class="tag">&lt;/<span class="title">td</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">td</span> <span class="attribute">th:text</span>=<span class="value">"${prod.inStock}? #{true} : #{false}"</span>&gt;</span>yes<span class="tag">&lt;/<span class="title">td</span>&gt;</span>
+      <span class="tag">&lt;/<span class="title">tr</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">table</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-41">
+    <section class="slide-content"><h2 id="iteraci-n-ii-ii-">Iteración (II/II)</h2>
+<p>Objetos iterables</p>
+<ul>
+<li>java.util.List</li>
+<li>java.util.Iterable</li>
+<li>java.util.Map</li>
+<li>Arrays</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-42">
+    <section class="slide-content"><h2 id="evaluaci-n-condicional-i-ii-">Evaluación condicional (I/II)</h2>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"comments.html"</span>
+   <span class="attribute">th:href</span>=<span class="value">"@{/product/comments(prodId=${prod.id})}"</span> 
+   <span class="attribute">th:if</span>=<span class="value">"${not #lists.isEmpty(prod.comments)}"</span>&gt;</span>view<span class="tag">&lt;/<span class="title">a</span>&gt;</span>
+
+<span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"comments.html"</span>
+   <span class="attribute">th:href</span>=<span class="value">"@{/comments(prodId=${prod.id})}"</span> 
+   <span class="attribute">th:unless</span>=<span class="value">"${#lists.isEmpty(prod.comments)}"</span>&gt;</span>view<span class="tag">&lt;/<span class="title">a</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-43">
+    <section class="slide-content"><h2 id="evaluci-n-condicional-ii-ii-">Evalución condicional (II/II)</h2>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">th:switch</span>=<span class="value">"${user.role}"</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">p</span> <span class="attribute">th:case</span>=<span class="value">"'admin'"</span>&gt;</span>User is an administrator<span class="tag">&lt;/<span class="title">p</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">p</span> <span class="attribute">th:case</span>=<span class="value">"#{roles.manager}"</span>&gt;</span>User is a manager<span class="tag">&lt;/<span class="title">p</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">p</span> <span class="attribute">th:case</span>=<span class="value">"*"</span>&gt;</span>User is some other thing<span class="tag">&lt;/<span class="title">p</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">div</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden  section" id="slide-44">
+    <section class="slide-content"><h2 id="layouts">Layouts</h2>
+</section>
+  </div>
+  <div class="slide hidden  " id="slide-45">
+    <section class="slide-content"><p>File: footer.html</p>
+<pre><code class="lang-xml"><span class="doctype">&lt;!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd"&gt;</span>
+
+<span class="tag">&lt;<span class="title">html</span> <span class="attribute">xmlns</span>=<span class="value">"http://www.w3.org/1999/xhtml"</span>
+      <span class="attribute">xmlns:th</span>=<span class="value">"http://www.thymeleaf.org"</span>&gt;</span>
+
+  <span class="tag">&lt;<span class="title">body</span>&gt;</span>
+
+    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">th:fragment</span>=<span class="value">"copy"</span>&gt;</span>
+      &amp;copy; 2011 The Good Thymes Virtual Grocery
+    <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+
+  <span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span></code></pre>
+<p>File: index.html</p>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">body</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">th:include</span>=<span class="value">"footer :: copy"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">body</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-46">
+    <section class="slide-content"><p>File: footer.html</p>
+<pre><code class="lang-xml"><span class="doctype">&lt;!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd"&gt;</span>
+
+<span class="tag">&lt;<span class="title">html</span> <span class="attribute">xmlns</span>=<span class="value">"http://www.w3.org/1999/xhtml"</span>
+      <span class="attribute">xmlns:th</span>=<span class="value">"http://www.thymeleaf.org"</span>&gt;</span>
+
+  <span class="tag">&lt;<span class="title">body</span>&gt;</span>
+
+    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"copy-id"</span>&gt;</span>
+      &amp;copy; 2011 The Good Thymes Virtual Grocery
+    <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+
+  <span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span></code></pre>
+<p>File: index.html</p>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">body</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">th:include</span>=<span class="value">"footer :: #copy-id"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">body</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-47">
+    <section class="slide-content"><h2 id="th-include-vs-th-replace-i-ii-">th:include vs th:replace (I/II)</h2>
+<pre><code class="lang-xml"><span class="doctype">&lt;!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd"&gt;</span>
+
+<span class="tag">&lt;<span class="title">html</span> <span class="attribute">xmlns</span>=<span class="value">"http://www.w3.org/1999/xhtml"</span>
+      <span class="attribute">xmlns:th</span>=<span class="value">"http://www.thymeleaf.org"</span>&gt;</span>
+
+  <span class="tag">&lt;<span class="title">body</span>&gt;</span>
+
+    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">th:fragment</span>=<span class="value">"copy"</span>&gt;</span>
+      &amp;copy; 2011 The Good Thymes Virtual Grocery
+    <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+
+  <span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span></code></pre>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">body</span>&gt;</span>
+
+  ...
+
+  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">th:include</span>=<span class="value">"footer :: copy"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">th:replace</span>=<span class="value">"footer :: copy"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+
+<span class="tag">&lt;/<span class="title">body</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-48">
+    <section class="slide-content"><h2 id="th-include-vs-th-replace-ii-ii-">th:include vs th:replace (II/II)</h2>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">body</span>&gt;</span>
+
+  ...
+
+  <span class="tag">&lt;<span class="title">div</span>&gt;</span>
+    &amp;copy; 2011 The Good Thymes Virtual Grocery
+  <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">footer</span>&gt;</span>
+    &amp;copy; 2011 The Good Thymes Virtual Grocery
+  <span class="tag">&lt;/<span class="title">footer</span>&gt;</span>
+
+<span class="tag">&lt;/<span class="title">body</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-49">
+    <section class="slide-content"><h2 id="fragmentos-con-par-metros">Fragmentos con parámetros</h2>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">th:fragment</span>=<span class="value">"frag (onevar,twovar)"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">p</span> <span class="attribute">th:text</span>=<span class="value">"${onevar} + ' - ' + ${twovar}"</span>&gt;</span>...<span class="tag">&lt;/<span class="title">p</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">div</span>&gt;</span></code></pre>
+<p>incluir un fragmento con parámetros:</p>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">th:include</span>=<span class="value">"::frag (${value1},${value2})"</span>&gt;</span>...<span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+<span class="tag">&lt;<span class="title">div</span> <span class="attribute">th:include</span>=<span class="value">"::frag (onevar=${value1},twovar=${value2})"</span>&gt;</span>...<span class="tag">&lt;/<span class="title">div</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-50">
+    <section class="slide-content"><h2 id="eliminar-fragmentos-i-ii-">Eliminar fragmentos (I/II)</h2>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">tbody</span> <span class="attribute">th:remove</span>=<span class="value">"all-but-first"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">tr</span> <span class="attribute">th:each</span>=<span class="value">"prod : ${prods}"</span> <span class="attribute">th:class</span>=<span class="value">"${prodStat.odd}? 'odd'"</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">td</span> <span class="attribute">th:text</span>=<span class="value">"${prod.name}"</span>&gt;</span>Onions<span class="tag">&lt;/<span class="title">td</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">td</span> <span class="attribute">th:text</span>=<span class="value">"${prod.price}"</span>&gt;</span>2.41<span class="tag">&lt;/<span class="title">td</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">td</span> <span class="attribute">th:text</span>=<span class="value">"${prod.inStock}? #{true} : #{false}"</span>&gt;</span>yes<span class="tag">&lt;/<span class="title">td</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">td</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">span</span> <span class="attribute">th:text</span>=<span class="value">"${#lists.size(prod.comments)}"</span>&gt;</span>2<span class="tag">&lt;/<span class="title">span</span>&gt;</span> comment/s
+        <span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"comments.html"</span> 
+           <span class="attribute">th:href</span>=<span class="value">"@{/product/comments(prodId=${prod.id})}"</span> 
+           <span class="attribute">th:unless</span>=<span class="value">"${#lists.isEmpty(prod.comments)}"</span>&gt;</span>view<span class="tag">&lt;/<span class="title">a</span>&gt;</span>
+      <span class="tag">&lt;/<span class="title">td</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">tr</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">tr</span> <span class="attribute">class</span>=<span class="value">"odd"</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">td</span>&gt;</span>Blue Lettuce<span class="tag">&lt;/<span class="title">td</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">td</span>&gt;</span>9.55<span class="tag">&lt;/<span class="title">td</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">td</span>&gt;</span>no<span class="tag">&lt;/<span class="title">td</span>&gt;</span>
+      <span class="tag">&lt;<span class="title">td</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">span</span>&gt;</span>0<span class="tag">&lt;/<span class="title">span</span>&gt;</span> comment/s
+      <span class="tag">&lt;/<span class="title">td</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">tr</span>&gt;</span>
+  <span class="tag">&lt;/<span class="title">tbody</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-51">
+    <section class="slide-content"><h2 id="eliminar-fragmentos-ii-ii-">Eliminar fragmentos (II/II)</h2>
+<p>Distintos modos de funcionamiento</p>
+<ul>
+<li>all: elimina tag y todo el contenido.</li>
+<li>body: conserva el tag, eliminando el contenido.</li>
+<li>tag: elimina el tag, preservando el contenido.</li>
+<li>all-but-first: elimina los hijos del  tag, excepto el primero.</li>
+<li>none : no elimina nada</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden  section" id="slide-52">
+    <section class="slide-content"><h1 id="integraci-n-con-spring-mvc">Integración con Spring MVC</h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-53">
+    <section class="slide-content"><ul>
+<li>Podremos utilizar plantillas Thymeleaf para la capa vista</li>
+<li>Podremos utilizar Spring EL en las expresiones de las plantillas</li>
+<li>Gestión de formularios</li>
+<li>Integración a nivel de internacionalización (mensajes definidos en MessageSources)</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-54">
+    <section class="slide-content"><p><img src="images/spring_schema.jpg" alt="spring-mvc"></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-55">
+    <section class="slide-content"><h2 id="configuraci-n-xml-">Configuración (XML)</h2>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"templateResolver"</span>
+       <span class="attribute">class</span>=<span class="value">"org.thymeleaf.templateresolver.ServletContextTemplateResolver"</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"prefix"</span> <span class="attribute">value</span>=<span class="value">"/WEB-INF/templates/"</span> /&gt;</span>
+  <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"suffix"</span> <span class="attribute">value</span>=<span class="value">".html"</span> /&gt;</span>
+  <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"templateMode"</span> <span class="attribute">value</span>=<span class="value">"HTML5"</span> /&gt;</span>
+<span class="tag">&lt;/<span class="title">bean</span>&gt;</span>
+
+<span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"templateEngine"</span>
+      <span class="attribute">class</span>=<span class="value">"org.thymeleaf.spring4.SpringTemplateEngine"</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"templateResolver"</span> <span class="attribute">ref</span>=<span class="value">"templateResolver"</span> /&gt;</span>
+<span class="tag">&lt;/<span class="title">bean</span>&gt;</span>
+
+<span class="tag">&lt;<span class="title">bean</span> <span class="attribute">class</span>=<span class="value">"org.thymeleaf.spring4.view.ThymeleafViewResolver"</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"templateEngine"</span> <span class="attribute">ref</span>=<span class="value">"templateEngine"</span> /&gt;</span>
+  <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"order"</span> <span class="attribute">value</span>=<span class="value">"1"</span> /&gt;</span>
+  <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"viewNames"</span> <span class="attribute">value</span>=<span class="value">"*.html,*.xhtml"</span> /&gt;</span>
+<span class="tag">&lt;/<span class="title">bean</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-56">
+    <section class="slide-content"><p>Controlador:</p>
+<pre><code class="lang-java">...
+<span class="annotation">@RequestMapping</span>(<span class="string">"/"</span>)
+<span class="keyword">public</span> String home() {
+    ...
+    <span class="keyword">return</span> <span class="string">"home"</span>;
+}
+...</code></pre>
+<p>Plantilla:</p>
+<pre><code class="lang-xml"><span class="tag">&lt;<span class="title">DOCTYPE</span> <span class="attribute">html</span>&gt;</span>
+
+<span class="tag">&lt;<span class="title">html</span> <span class="attribute">xmlns:th</span>=<span class="value">"http://www.thymeleaf.org"</span>&gt;</span>
+
+  <span class="tag">&lt;<span class="title">head</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">title</span>&gt;</span>Home<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
+  <span class="tag">&lt;/<span class="title">head</span>&gt;</span>
+
+  <span class="tag">&lt;<span class="title">body</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">h2</span>&gt;</span>Home!<span class="tag">&lt;/<span class="title">h2</span>&gt;</span>
+  <span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span></code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-57">
+    <section class="slide-content"><h1 id="m-s-informaci-n">más información</h1>
+<h2 id="http-www-thymeleaf-org-documentation-html"><a href="http://www.thymeleaf.org/documentation.html">http://www.thymeleaf.org/documentation.html</a></h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-58">
+    <section class="slide-content"><h1 id="thymeleaf-rb">Thymeleaf.rb</h1>
+<h2 id="wip-wanna-help-">WIP. Wanna help?</h2>
+<ul>
+<li><a href="http://github.com/trabe/thymeleaf-rb">http://github.com/trabe/thymeleaf-rb</a></li>
+<li><a href="http://github.com/trabe/thymeleaf-rails">http://github.com/trabe/thymeleaf-rails</a></li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-59">
+    <section class="slide-content"><h1 id="-dudas-">¿dudas?</h1>
+</section>
+  </div>
+  <div class="slide hidden  image" id="slide-60">
+    <section class="slide-content"><p><img src="images/trabe.png" alt="Trabe"></p>
+</section>
+  </div>
+
+
+
+  <script type="text/javascript">
+    /**
+ * Returns the current page number of the presentation.
+ */
+function currentPosition() {
+  return parseInt(document.querySelector('.slide:not(.hidden)').id.slice(6));
+}
+
+
+/**
+ * Navigates forward n pages
+ * If n is negative, we will navigate in reverse
+ */
+function navigate(n) {
+  var position = currentPosition();
+  var numSlides = document.getElementsByClassName('slide').length;
+
+  /* Positions are 1-indexed, so we need to add and subtract 1 */
+  var nextPosition = (position - 1 + n) % numSlides + 1;
+
+  /* Normalize nextPosition in-case of a negative modulo result */
+  nextPosition = (nextPosition - 1 + numSlides) % numSlides + 1;
+
+  document.getElementById('slide-' + position).classList.add('hidden');
+  document.getElementById('slide-' + nextPosition).classList.remove('hidden');
+
+  updateProgress();
+  updateURL();
+  updateTabIndex();
+}
+
+
+/**
+ * Updates the current URL to include a hashtag of the current page number.
+ */
+function updateURL() {
+  window.history.replaceState({} , null, '#' + currentPosition());
+}
+
+
+/**
+ * Sets the progress indicator.
+ */
+function updateProgress() {
+  var progressBar = document.querySelector('.progress-bar');
+
+  if (progressBar !== null) {
+    var numSlides = document.getElementsByClassName('slide').length;
+    var position = currentPosition() - 1;
+    var percent = (numSlides === 1) ? 100 : 100 * position / (numSlides - 1);
+    progressBar.style.width = percent.toString() + '%';
+  }
+}
+
+
+/**
+ * Removes tabindex property from all links on the current slide, sets
+ * tabindex = -1 for all links on other slides. Prevents slides from appearing
+ * out of control.
+ */
+function updateTabIndex() {
+  var allLinks = document.querySelectorAll('.slide a');
+  var position = currentPosition();
+  var currentPageLinks = document.getElementById('slide-' + position).querySelectorAll('a');
+  var i;
+
+  for (i = 0; i < allLinks.length; i++) {
+    allLinks[i].setAttribute('tabindex', -1);
+  }
+
+  for (i = 0; i < currentPageLinks.length; i++) {
+    currentPageLinks[i].removeAttribute('tabindex');
+  }
+}
+
+/**
+ * Determines whether or not we are currently in full screen mode
+ */
+function isFullScreen() {
+  return document.fullscreenElement ||
+         document.mozFullScreenElement ||
+         document.webkitFullscreenElement ||
+         document.msFullscreenElement;
+}
+
+/**
+ * Toggle fullScreen mode on document element.
+ * Works on chrome (>= 15), firefox (>= 9), ie (>= 11), opera(>= 12.1), safari (>= 5).
+ */
+function toggleFullScreen() {
+  /* Convenient renames */
+  var docElem = document.documentElement;
+  var doc = document;
+
+  docElem.requestFullscreen =
+      docElem.requestFullscreen ||
+      docElem.msRequestFullscreen ||
+      docElem.mozRequestFullScreen ||
+      docElem.webkitRequestFullscreen.bind(docElem, Element.ALLOW_KEYBOARD_INPUT);
+
+  doc.exitFullscreen =
+      doc.exitFullscreen ||
+      doc.msExitFullscreen ||
+      doc.mozCancelFullScreen ||
+      doc.webkitExitFullscreen;
+
+  isFullScreen() ? doc.exitFullscreen() : docElem.requestFullscreen();
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Update the tabindex to prevent weird slide transitioning
+  updateTabIndex();
+
+  // If the location hash specifies a page number, go to it.
+  var page = window.location.hash.slice(1);
+  if (page) {
+    navigate(parseInt(page) - 1);
+  }
+
+  document.onkeydown = function (e) {
+    var kc = e.keyCode;
+
+    // left, down, H, J, backspace, PgUp - BACK
+    // up, right, K, L, space, PgDn - FORWARD
+    // enter - FULLSCREEN
+    if (kc === 37 || kc === 40 || kc === 8 || kc === 72 || kc === 74 || kc === 33) {
+      navigate(-1);
+    } else if (kc === 38 || kc === 39 || kc === 32 || kc === 75 || kc === 76 || kc === 34) {
+      navigate(1);
+    } else if (kc === 13) {
+      toggleFullScreen();
+    }
+  };
+
+  if (document.querySelector('.next') && document.querySelector('.prev')) {
+    document.querySelector('.next').onclick = function (e) {
+      e.preventDefault();
+      navigate(1);
+    };
+
+    document.querySelector('.prev').onclick = function (e) {
+      e.preventDefault();
+      navigate(-1);
+    };
+  }
+});
+
+
+  </script>
+</body>
+</html>
